@@ -45,7 +45,7 @@ func (m Method) MarshalWube(enc wube.Encoder) error {
 }
 
 func (m *Method) UnmarshalWube(dec wube.Decoder) error {
-	d, err := dec.ReadEnum(8)
+	d, err := dec.ReadEnum()
 	if err != nil {
 		return err
 	}
@@ -82,7 +82,7 @@ func (s Scheme) MarshalWube(enc wube.Encoder) error {
 
 func (s *Scheme) UnmarshalWube(dec wube.Decoder) error {
 	// Read enum to know the discriminant.
-	d, err := dec.ReadEnum(2)
+	d, err := dec.ReadEnum()
 	if err != nil {
 		return err
 	}

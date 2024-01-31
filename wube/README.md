@@ -17,6 +17,7 @@ Encoding:
 - [x] Strings
 - [x] Booleans
 - [x] Enums - Only helpers for code generation available as `Encoder.WriteEnum`.
+- [x] Variants - Only helpers for code generation available as `Encoder.WriteVariant`.
 - [x] Flags - Only helpers for code generation available as `types.Flags`.
 - [x] Lists
 - [x] Tuples - Implemented as `types.{V1, V2, V3, V4, V5}` (implements `wube.Marshaler`).
@@ -40,12 +41,10 @@ Decoding:
 - [x] Futures - Implemented as `types.Future` (implements `wube.Unmarshaler`)
 - [x] Records
 
-Types to be handled by code generation using the logic implemented in this package:
-
-- Enums - We need to know max discriminant value when decoding,
-  which is not really possible when decoding into a zero value of any type.
-- Variants - These must be inherently handled by code generation in much the same way
-  oneof is implemented in Protocol Buffers for Go.
+Enums and variants are best handled using code generation, see `examples/http` for a possible
+code to be generated. Notably there is no `Decoder.ReadVariant` since we need to know the object
+to unmarshal based on the discriminant read. This could be handled by receiving the mapping of
+discriminants to the given objects to unmarshal into, but there is little value in this anyway.
 
 ### Streams, resources and functions
 

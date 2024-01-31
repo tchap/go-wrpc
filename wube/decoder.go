@@ -313,21 +313,6 @@ func (dec Decoder) ReadLen() (int, error) {
 	return int(n), err
 }
 
-func (dec Decoder) ReadEnum(dMax uint64) (uint64, error) {
-	switch {
-	case dMax <= maxUInt8:
-		d, err := dec.ReadUInt8()
-		return uint64(d), err
-
-	case dMax <= maxUInt16:
-		d, err := dec.ReadUInt16()
-		return uint64(d), err
-
-	case dMax <= maxUInt32:
-		d, err := dec.ReadUInt32()
-		return uint64(d), err
-
-	default:
-		return dec.ReadUInt64()
-	}
+func (dec Decoder) ReadEnum() (uint64, error) {
+	return dec.ReadUInt64()
 }
