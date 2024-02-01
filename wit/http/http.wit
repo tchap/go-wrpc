@@ -1,0 +1,58 @@
+package wrpc:http@0.2.0-rc-2023-12-05;
+
+interface types {
+  use wasi:http/types@0.2.0-rc-2024-01-16.{method, scheme, status-code, error-code};
+  use wasi:clocks/monotonic-clock@0.2.0-rc-2023-11-10.{duration};
+
+  record request-options {
+    connect-timeout: duration,
+    first-byte-timeout: duration,
+    between-bytes-timeout: duration,
+  }
+
+  record outgoing-request {
+    headers: list<tuple<string,list<u8>>>,
+    method: method,
+    path-with-query: option<string>,
+    scheme: option<scheme>,
+    authority: option<string>,
+    body: stream<u8>,
+    trailers: future<list<tuple<string,list<u8>>>>,
+  }
+
+  record outgoing-response {
+    headers: list<tuple<string,list<u8>>>,
+    status: status-code,
+    body: stream<u8>,
+    trailers: future<list<tuple<string,list<u8>>>>,
+  }
+
+  record incoming-request {
+    method: method,
+    path-with-query: option<string>,
+    scheme: option<scheme>,
+    authority: option<string>,
+    headers: list<tuple<string,list<u8>>>,
+    body: stream<u8>,
+    trailers: future<list<tuple<string,list<u8>>>>,
+  }
+
+  record incoming-response {
+    status: status-code,
+    headers: list<tuple<string,list<u8>>>,
+    body: stream<u8>,
+    trailers: future<list<tuple<string,list<u8>>>>,
+  }
+}
+
+interface incoming-handler {
+  use types.{incoming-request, outgoing-response, error-code};
+
+  handle: func(request: incoming-request) -> result<outgoing-response, error-code>;
+}
+
+interface outgoing-handler {
+  use types.{outgoing-request, request-options, incoming-response, error-code};
+
+  handle: func(request: outgoing-request, options: option<request-options>) -> result<future<incoming-response>, error-code>;
+}

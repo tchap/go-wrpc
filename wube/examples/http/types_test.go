@@ -54,10 +54,12 @@ func (s *TypesSuite) TestOutgoingRequest_Encode() {
 		Headers: Headers{
 			{"Content-Type", []byte("application/json")},
 		},
-		Method:        http.MethodPost,
+		Method:        http.Method{Variant: http.MethodPost{}},
 		PathWithQuery: types.NewSomeOption[string]("/api/v1/accounts"),
-		Scheme:        types.NewSomeOption[http.Scheme](http.NewScheme_Https()),
-		Body:          []byte(`{"name": "John"}`),
+		Scheme: types.NewSomeOption[http.Scheme](http.Scheme{
+			Variant: http.SchemeHTTPS{},
+		}),
+		Body: []byte(`{"name": "John"}`),
 	}
 
 	if s.NoError(s.Encoder.Encode(&req)) {
@@ -106,10 +108,12 @@ func (s *TypesSuite) TestOutgoingRequest_Decode() {
 			Headers: Headers{
 				{"Content-Type", []byte("application/json")},
 			},
-			Method:        http.MethodPost,
+			Method:        http.Method{Variant: http.MethodPost{}},
 			PathWithQuery: types.NewSomeOption[string]("/api/v1/accounts"),
-			Scheme:        types.NewSomeOption[http.Scheme](http.NewScheme_Https()),
-			Body:          []byte(`{"name": "John"}`),
+			Scheme: types.NewSomeOption[http.Scheme](http.Scheme{
+				Variant: http.SchemeHTTPS{},
+			}),
+			Body: []byte(`{"name": "John"}`),
 		}, req)
 	}
 }
