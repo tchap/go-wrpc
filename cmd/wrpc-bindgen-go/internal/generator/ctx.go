@@ -94,12 +94,13 @@ func (c *Ctx) writeVariant(w io.Writer, t *wit.TypeDef, k *wit.Variant) error {
 
 		`, variantCaseTypeName(*t.Name, kc.Name), i)
 	}
-	fmt.Fprintln(w, `
+	fmt.Fprintf(w, `
 			default:
-				return fmt.Errorf("invalid scheme variant value: %v", v)
+				return fmt.Errorf("invalid %s variant value: %%v", v)
 			}
 		}
-	`)
+
+	`, *t.Name)
 
 	// UnmarshalWube
 	fmt.Fprintf(w, `func (wrapper *%s) UnmarshalWube(dec wube.Decoder) error {
@@ -123,11 +124,12 @@ func (c *Ctx) writeVariant(w io.Writer, t *wit.TypeDef, k *wit.Variant) error {
 
 			`, i, variantCaseTypeName(*t.Name, kc.Name))
 	}
-	fmt.Fprintln(w, `
-		default:
-			return fmt.Errorf("unknown scheme variant discriminant: %d", d)
+	fmt.Fprintf(w, `
+			default:
+				return fmt.Errorf("unknown %s variant discriminant: %%d", d)
+			}
 		}
-	}`)
+	`, *t.Name)
 
 	for _, kase := range k.Cases {
 		if err := c.writeCase(w, *t.Name, &kase); err != nil {

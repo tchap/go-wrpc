@@ -60,7 +60,7 @@ func (wrapper Method) MarshalWube(enc wube.Encoder) error {
 		return enc.WriteVariant(9, v)
 
 	default:
-		return fmt.Errorf("invalid scheme variant value: %v", v)
+		return fmt.Errorf("invalid method variant value: %v", v)
 	}
 }
 
@@ -163,7 +163,7 @@ func (wrapper *Method) UnmarshalWube(dec wube.Decoder) error {
 		return nil
 
 	default:
-		return fmt.Errorf("unknown scheme variant discriminant: %d", d)
+		return fmt.Errorf("unknown method variant discriminant: %d", d)
 	}
 }
 
