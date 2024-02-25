@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/kr/pretty"
 
@@ -24,5 +26,10 @@ func run() error {
 	}
 
 	pretty.Println(hostData)
+
+	// Block until interrupted.
+	signalCh := make(chan os.Signal, 1)
+	signal.Notify(signalCh, syscall.SIGTERM, syscall.SIGINT)
+	<-signalCh
 	return nil
 }
