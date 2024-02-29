@@ -30,19 +30,19 @@ build_x86_64_linux:
 build_x86_64_macos:
 	GOOS=darwin GOARCH=amd64 go build -o build/x86_64-macos/httpserver
 
-oci_url_base ?= localhost:5000/v2
+oci_url_base ?= localhost:5000/wasmcloud
 oci_url      ?= $(oci_url_base)/$(PROJECT):$(VERSION)
 ifeq ($(WASH_REG_USER),)
 	oci_insecure := --insecure
 endif
 
 push: build/httpserver.par.gz
-	$(WASH) reg push $(oci_insecure) $(oci_url) $(dest_par)
+	$(WASH) push $(oci_insecure) $(oci_url) build/httpserver.par.gz
 
 link_name ?= default
 
 start:
-	$(WASH) ctl start provider $(oci_url) \
-		--host-id $(shell $(WASH) ctl get hosts -o json | jq -r ".hosts[0].id") \
+	$(WASH) start provider $(oci_url) \
+		--host-id $(shell $(WASH) get hosts -o json | jq -r ".hosts[0].id") \
 		--link-name $(link_name) \
 		--timeout-ms 4000
